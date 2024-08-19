@@ -1,16 +1,17 @@
 /* eslint-disable no-console */
-
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
 import { identify } from '@libp2p/identify'
 import { webSockets } from '@libp2p/websockets'
 import { createLibp2p } from 'libp2p'
+import process from "node:process";
 
 async function main () {
   const node = await createLibp2p({
     addresses: {
-      listen: ['/ip4/0.0.0.0/tcp/0/ws']
+      listen: ['/ip4/0.0.0.0/tcp/0/ws'],
+      announce: [`/dns4/0.0.0.0/tcp/${process.env.PORT ?process.env.PORT:'7456' }/ws`],
       // TODO check "What is next?" section
       // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
     },
@@ -28,6 +29,7 @@ async function main () {
       relay: circuitRelayServer()
     }
   })
+
 
   console.log(`Node started with id ${node.peerId.toString()}`)
   console.log('Listening on:')

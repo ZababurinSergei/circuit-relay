@@ -1,0 +1,105 @@
+import { createServer, Socket } from 'net';
+import { IncomingMessage, ServerResponse, request as httpRequest } from 'http';
+
+const HTTP_PORT: number = 8001;
+const PROXY_TCP_PORT: number = 8002;
+
+interface Store {
+    requestBody: string;
+    responseBody: string;
+}
+
+const store: Store = {
+    requestBody: '',
+    responseBody: '',
+};
+
+const proxy = createServer((localSocket: Socket) => {
+    const remoteSocket = new Socket();
+
+    remoteSocket.connect(HTTP_PORT, 'localhost', () => {
+        localSocket.on('data', (chunk: Buffer) => {
+            remoteSocket.write(chunk);
+        });
+
+        remoteSocket.on('data', (chunk: Buffer) => {
+            localSocket.write(chunk);
+        });
+
+        localSocket.on('close', () => {
+            remoteSocket.end();
+        });
+
+        remoteSocket.on('close', () => {
+            localSocket.end();
+        });
+    });
+});
+
+const httpServer = createServer((req: IncomingMessage, res: ServerResponse) => {
+    let data = '';
+
+    req.on('data', (chunk: Buffer) => {
+        data += chunk.toString('utf-8');
+    });
+
+    req.on('end', () => {
+        store.requestBody = data;
+
+        const content: string = `Hi there, ${data}`;
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader('Content-Length', content.length.toString());
+        res.write(content);
+        res.end();
+    });
+});
+
+const httpServerListen = () => {
+    httpServer.listen(HTTP_PORT, () => {
+        console.log(`HTTP server listening on ${HTTP_PORT}`);
+
+        proxyListen();
+    });
+};
+
+const proxyListen = () => {
+    proxy.listen(PROXY_TCP_PORT, () => {
+        console.log(`TCP proxy listening on ${PROXY_TCP_PORT}`);
+
+        httpRequest();
+    });
+};
+
+const httpRequest = () => {
+    const req = httpRequest({
+        port: PROXY_TCP_PORT,
+        method: 'POST',
+        path: '/greet',
+    }, (res: IncomingMessage) => {
+        let data: str = '';
+
+        res.on('data', (chunk: Buffer) => {
+            data += chunk.toString('utf-8');
+        });
+
+        res.on('end', closeConnections);
+    });
+
+    const content: string = 'Joe';
+    req.setHeader('Content-Type', 'text/plain');
+    req.setHeader('Content-Length', content.length.toString());
+    req.write(content);
+    req.end();
+};
+
+const closeConnections = () => {
+    proxy.close();
+    httpServer.close();
+
+    console.log(store.requestBody); // Joe
+
+    console.log(store.responseBody); // Hi there, Joe
+};
+
+httpServerListen();
