@@ -25,6 +25,7 @@
     "@libp2p/bootstrap": "^10.1.5",
     "@libp2p/circuit-relay-v2": "^1.0.4",
     "@libp2p/identify": "^2.1.0",
+    "@libp2p/peer-id-factory": "^4.2.4",
     "@libp2p/websockets": "^8.0.4",
     "@multiformats/multiaddr": "^12.1.11",
     "compression": "^1.7.4",
@@ -32,7 +33,9 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-enqueue": "^1.0.0",
-    "libp2p": "^1.0.8 "
+    "libp2p": "^1.0.8 ",
+    "libp2p-swarm": "^0.35.0",
+    "peer-id": "^0.16.0"
   },
   "devDependencies": {
     "test-ipfs-example": "^1.1.0"

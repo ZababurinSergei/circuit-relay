@@ -13,9 +13,27 @@ import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
 import { identify } from '@libp2p/identify'
 import { webSockets } from '@libp2p/websockets'
 import { createLibp2p } from 'libp2p'
+import * as  peerIdLib  from '@libp2p/peer-id'
+import * as createEd25519PeerId from '@libp2p/peer-id-factory'
+import fs from "node:fs";
 
-dotenv.config();
 let __dirname = process.cwd();
+const buffer = fs.readFileSync(__dirname + '/peerId.proto')
+const peerId =  await createEd25519PeerId.createFromProtobuf(buffer)
+// console.log(peerId222)
+// const peerId_1 = await createEd25519PeerId.createEd25519PeerId()
+// const peerId =  await createEd25519PeerId.createFromProtobuf(createEd25519PeerId.exportToProtobuf(peerId_1))
+// fs.writeFileSync(__dirname + '/peerId.proto', createEd25519PeerId.exportToProtobuf(peerId_1))
+// console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', createEd25519PeerId.exportToProtobuf(peerId_1))
+// console.log('-------------------------------',peerId)
+// console.log('=========== peerId ===============', peerId_1.toJSON())
+dotenv.config();
+
+
+const port = process.env.PORT
+    ? process.env.PORT
+    : 4864;
+
 let whitelist = []
 
 let app = express();
@@ -31,8 +49,6 @@ async function main () {
     maxSize: 200,
     timeout: 30000
   });
-
-  console.log('__dirname', __dirname);
 
   app.use(await cors({credentials: true}));
   app.use(queue.getMiddleware());
@@ -50,11 +66,12 @@ async function main () {
 
   // app.use('/assets',express.static(`${__dirname}`));
   app.use(express.static('public'))
-
+      // `/ip4/0.0.0.0/tcp/${port}/ws`
   const node = await createLibp2p({
+    peerId,
     addresses: {
-      listen: ['/ip4/0.0.0.0/tcp/0/ws'],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss`],
+      listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/${port}/ws`],
       // TODO check "What is next?" section
       // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
     },
@@ -75,7 +92,7 @@ async function main () {
 
 
   console.log(`Node started with id ${node.peerId.toString()}`)
-  console.log('Listening on:')
+  console.log('Listening on:', node.getMultiaddrs())
   let pathNode = ''
   node.getMultiaddrs().forEach((ma) => {
     pathNode = ma.toString()
@@ -167,15 +184,10 @@ async function main () {
 
   app.use(queue.getErrorMiddleware());
 
-
-  const port = process.env.PORT
-      ? process.env.PORT
-      : 4864;
-
-  app.listen(port, () => {
-    console.log('pid: ', process.pid);
-    console.log('listening on http://localhost:' + port);
-  });
+  // app.listen(port, () => {
+  //   console.log('pid: ', process.pid);
+  //   console.log('listening on http://localhost:' + port);
+  // });
 }
 
 main()

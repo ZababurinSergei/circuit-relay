@@ -25,7 +25,8 @@ async function main () {
     peerDiscovery: [
       bootstrap({
         list: [
-          '/dns4/circuit-relay.onrender.com/tcp/443/ws/p2p/12D3KooWDvxJ87V36avCnKr6acpvE2anx33SGq1bK9LPDLwTjXtV',
+          // '/ip4/192.168.218.166/tcp/4864/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1',
+          '/dns4/127.0.0.1/tcp/4864/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1',
         ]
       })
     ],
@@ -46,7 +47,6 @@ async function main () {
 
   node.addEventListener('peer:discovery', (evt) => {
     console.log(`Connected to the relay ${evt.detail.id.toString()}`)
-
   })
   // console.log(`Connected to the relay ${conn.remotePeer.toString()}`)
 
