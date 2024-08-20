@@ -48,7 +48,7 @@ async function main () {
     }
   };
 
-  app.use(express.static(`${__dirname}/index.html`));
+  app.use(express.static(`${__dirname}`));
 
   const node = await createLibp2p({
     addresses: {

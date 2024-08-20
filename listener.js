@@ -25,7 +25,7 @@ async function main () {
     peerDiscovery: [
       bootstrap({
         list: [
-          '/dns4/localhost/tcp/7658/ws/p2p/12D3KooWMmjPugd3yajKinwZaChmNnCGpvvqT7aXzcjfx9RoLcoY',
+          '/dns4/circuit-relay.onrender.com/tcp/443/ws/p2p/12D3KooWDvxJ87V36avCnKr6acpvE2anx33SGq1bK9LPDLwTjXtV',
         ]
       })
     ],
