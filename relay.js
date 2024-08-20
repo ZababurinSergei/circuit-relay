@@ -54,7 +54,7 @@ async function main () {
   const node = await createLibp2p({
     addresses: {
       listen: ['/ip4/0.0.0.0/tcp/0/ws'],
-      announce: [`/dns4/0.0.0.0/tcp/0/ws`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss`],
       // TODO check "What is next?" section
       // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
     },
