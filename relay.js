@@ -70,8 +70,8 @@ async function main () {
   const node = await createLibp2p({
     peerId,
     addresses: {
-      listen: [`/ip4/0.0.0.0/tcp/${port + 1}/wss`],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/${port + 1}/wss`],
+      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss`],
       // TODO check "What is next?" section
       // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
     },
@@ -92,7 +92,7 @@ async function main () {
 
 
   console.log(`Node started with id ${node.peerId.toString()}`)
-  // console.log('Listening on:', node.getMultiaddrs()[0])
+  console.log('Listening on:', node.getMultiaddrs())
   let pathNode = ''
   node.getMultiaddrs().forEach((ma) => {
     pathNode = ma.toString()
