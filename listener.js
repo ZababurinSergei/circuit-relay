@@ -27,7 +27,10 @@ async function main () {
         list: [
           // '/ip4/192.168.218.166/tcp/4864/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1',
           // '/dns4/127.0.0.1/tcp/4864/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1',
-        "/dns4/circuit-relay.onrender.com/tcp/10000/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1"
+          //   "/ip4/127.0.0.1/tcp/6572/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1"
+          "/dns4/localhost/tcp/6572/ws/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1"
+
+          // "/dns4/circuit-relay.onrender.com/tcp/10000/wss/p2p/12D3KooWAyrwipbQChADmVUepf7N7Q7rJcwBQw3nb4TLcrLB2uJ1"
         ]
       })
     ],
