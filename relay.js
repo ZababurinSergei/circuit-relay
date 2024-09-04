@@ -68,8 +68,8 @@ async function main () {
 
   let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/${port}/wss/p2p/${peerId.toString()}`]
     }
     : {
       listen: [`/ip4/0.0.0.0/tcp/${port + 1}/ws`],
@@ -188,7 +188,7 @@ async function main () {
 
   app.use(queue.getErrorMiddleware());
 
-  app.listen(port, () => {
+  app.listen(port + 1, () => {
     console.log('pid: ', process.pid);
     console.log('listening on http://localhost:' + port);
   });
