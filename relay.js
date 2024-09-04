@@ -40,7 +40,6 @@ let app = express();
 
 async function main () {
 
-
   app.use(compression());
   app.use(express.json());
 
@@ -66,15 +65,20 @@ async function main () {
 
   // app.use('/assets',express.static(`${__dirname}`));
   app.use(express.static('public'))
-      // `/ip4/0.0.0.0/tcp/${port}/ws`
+
+  let adresses = process.env.PORT
+    ? {
+      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss/p2p/${peerId.toString()}`]
+    }
+    : {
+      listen: [`/ip4/0.0.0.0/tcp/${port + 1}/ws`],
+      announce: [`/dns4/localhost/tcp/${port + 1}/ws/p2p/${peerId.toString()}`]
+    }
+
   const node = await createLibp2p({
     peerId,
-    addresses: {
-      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss`],
-      // TODO check "What is next?" section
-      // announce: ['/dns4/auto-relay.libp2p.io/tcp/443/wss/p2p/QmWDn2LY8nannvSWJzruUYoLZ4vV83vfCBwd8DipvdgQc3']
-    },
+    addresses: adresses,
     transports: [
       webSockets()
     ],
@@ -92,13 +96,13 @@ async function main () {
 
 
   console.log(`Node started with id ${node.peerId.toString()}`)
-  console.log('Listening on:', node.getMultiaddrs())
-  let pathNode = ''
-  node.getMultiaddrs().forEach((ma) => {
-    pathNode = ma.toString()
-    console.log(pathNode)
-  })
 
+  let pathNode = ''
+  console.log('========= node =========', node)
+  node.getMultiaddrs().forEach((ma, index) => {
+    pathNode = ma.toString()
+    console.log(`${index}::Listening on:`, pathNode)
+  })
 
   app.get(`/env.json`, async (req, res) => {
     res.status(200).sendFile(path.join(__dirname, 'env.json'))
