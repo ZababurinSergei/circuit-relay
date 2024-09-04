@@ -68,8 +68,8 @@ async function main () {
 
   let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/${port}/wss/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/80/ws`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/80/ws/p2p/${peerId.toString()}`]
     }
     : {
       listen: [`/ip4/0.0.0.0/tcp/${port + 1}/ws`],
@@ -93,7 +93,6 @@ async function main () {
       relay: circuitRelayServer()
     }
   })
-
 
   console.log(`Node started with id ${node.peerId.toString()}`)
 
@@ -188,7 +187,7 @@ async function main () {
 
   app.use(queue.getErrorMiddleware());
 
-  app.listen(port + 1, () => {
+  app.listen(port, () => {
     console.log('pid: ', process.pid);
     console.log('listening on http://localhost:' + port);
   });
