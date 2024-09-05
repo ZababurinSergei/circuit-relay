@@ -158,9 +158,9 @@ async function main () {
 
     let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/433/wss`],
+      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
       announce: [
-        `/dns4/circuit-relay.onrender.com/tcp/433/wss/p2p/${peerId.toString()}`
+        `/dns4/circuit-relay.onrender.com/tcp/443/wss/p2p/${peerId.toString()}`
       ]
     }
     : {
