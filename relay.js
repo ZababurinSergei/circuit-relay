@@ -68,12 +68,12 @@ async function main () {
 
   let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
-      announce: [`/dns4/circuit-relay.onrender.com/tcp/443/wss/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
+      announce: [`/dns4/circuit-relay.onrender.com/tcp/${port}/wss/p2p/${peerId.toString()}`]
     }
     : {
-      listen: [`/ip4/0.0.0.0/tcp/${port + 1}/ws`],
-      announce: [`/dns4/localhost/tcp/${port + 1}/ws/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/8734/ws`],
+      announce: [`/dns4/localhost/tcp/8734/ws/p2p/${peerId.toString()}`]
     }
 
   const node = await createLibp2p({
@@ -187,10 +187,10 @@ async function main () {
 
   app.use(queue.getErrorMiddleware());
 
-  app.listen(port, () => {
-    console.log('pid: ', process.pid);
-    console.log('listening on http://localhost:' + port);
-  });
+  // app.listen(port, () => {
+  //   console.log('pid: ', process.pid);
+  //   console.log('listening on http://localhost:' + port);
+  // });
 }
 
 main()
