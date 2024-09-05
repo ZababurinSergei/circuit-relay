@@ -16,6 +16,7 @@ import { createLibp2p } from 'libp2p'
 import * as  peerIdLib  from '@libp2p/peer-id'
 import * as createEd25519PeerId from '@libp2p/peer-id-factory'
 import fs from "node:fs";
+import httpProxy from 'http-proxy' 
 
 let __dirname = process.cwd();
 const buffer = fs.readFileSync(__dirname + '/peerId.proto')
@@ -65,46 +66,6 @@ async function main () {
 
   // app.use('/assets',express.static(`${__dirname}`));
   app.use(express.static('public'))
-
-  let adresses = process.env.PORT
-    ? {
-      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
-      announce: [
-        `/dns4/0.0.0.0/tcp/${port}`,
-        `/dns4/circuit-relay.onrender.com/tcp/${port}/wss/p2p/${peerId.toString()}`
-      ]
-    }
-    : {
-      listen: [`/ip4/0.0.0.0/tcp/8734/ws`],
-      announce: [`/dns4/localhost/tcp/8734/ws/p2p/${peerId.toString()}`]
-    }
-
-  const node = await createLibp2p({
-    peerId,
-    addresses: adresses,
-    transports: [
-      webSockets()
-    ],
-    connectionEncryption: [
-      noise()
-    ],
-    streamMuxers: [
-      yamux()
-    ],
-    services: {
-      identify: identify(),
-      relay: circuitRelayServer()
-    }
-  })
-
-  console.log(`Node started with id ${node.peerId.toString()}`)
-
-  let pathNode = ''
-  console.log('========= node =========', node)
-  node.getMultiaddrs().forEach((ma, index) => {
-    pathNode = ma.toString()
-    console.log(`${index}::Listening on:`, pathNode)
-  })
 
   app.get(`/env.json`, async (req, res) => {
     res.status(200).sendFile(path.join(__dirname, 'env.json'))
@@ -191,6 +152,55 @@ async function main () {
   app.use(queue.getErrorMiddleware());
 
   // app.listen(port, () => {
+  //   console.log('pid: ', process.pid);
+  //   console.log('listening on http://localhost:' + port);
+  // });
+
+    let adresses = process.env.PORT
+    ? {
+      listen: [`/ip4/0.0.0.0/tcp/433/wss`],
+      announce: [
+        `/dns4/circuit-relay.onrender.com/tcp/433/wss/p2p/${peerId.toString()}`
+      ]
+    }
+    : {
+      listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
+      announce: [`/dns4/localhost/tcp/${port}/ws/p2p/${peerId.toString()}`]
+    }
+
+  const node = await createLibp2p({
+    peerId,
+    addresses: adresses,
+    transports: [
+      webSockets()
+    ],
+    connectionEncryption: [
+      noise()
+    ],
+    streamMuxers: [
+      yamux()
+    ],
+    services: {
+      identify: identify(),
+      relay: circuitRelayServer()
+    }
+  })
+
+  console.log(`Node started with id ${node.peerId.toString()}`)
+  let pathNode = ''
+  console.log('========= node =========', node.services.relay)
+
+  node.getMultiaddrs().forEach((ma, index) => {
+    pathNode = ma.toString()
+    console.log(`${index}::Listening on:`, pathNode)
+  })
+
+  // httpProxy.createServer({
+  //   target: proxtBalancer,
+  //   ws: true
+  // }).listen(port);
+
+    // app.listen(port, () => {
   //   console.log('pid: ', process.pid);
   //   console.log('listening on http://localhost:' + port);
   // });
