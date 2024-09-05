@@ -160,7 +160,7 @@ async function main () {
     ? {
       listen: [`/ip4/0.0.0.0/tcp/443/wss`],
       announce: [
-        `/dns4/circuit-relay.onrender.com/tcp/443/wss/p2p/${peerId.toString()}`
+        `/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/443/wss/p2p/${peerId.toString()}`
       ]
     }
     : {
