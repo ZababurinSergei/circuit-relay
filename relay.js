@@ -158,8 +158,8 @@ async function main () {
 
     let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/${port}/tls/ws`],
-      announce: [`/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/${port}/tls/ws/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
+      announce: [`/dnsaddr/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/${port}/wss/p2p/${peerId.toString()}`]
     }
     : {
       listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
