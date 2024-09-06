@@ -33,7 +33,7 @@ dotenv.config();
 
 const port = process.env.PORT
     ? process.env.PORT
-    : 4864;
+    : 4839;
 
 let whitelist = []
 
@@ -158,10 +158,8 @@ async function main () {
 
     let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/443/wss`],
-      announce: [
-        `/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/443/wss/p2p/${peerId.toString()}`
-      ]
+      listen: [`/ip4/0.0.0.0/tcp/443/tls/ws`],
+      announce: [`/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/443/tls/ws/p2p/${peerId.toString()}`]
     }
     : {
       listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
@@ -200,10 +198,10 @@ async function main () {
   //   ws: true
   // }).listen(port);
 
-    app.listen(port, () => {
-    console.log('pid: ', process.pid);
-    console.log('listening on http://localhost:' + port);
-  });
+    // app.listen(port, () => {
+    // console.log('pid: ', process.pid);
+    // console.log('listening on http://localhost:' + port);
+  // });
 }
 
 main()
