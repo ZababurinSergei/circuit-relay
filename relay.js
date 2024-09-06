@@ -5,6 +5,7 @@ import Enqueue from 'express-enqueue';
 import compression from 'compression';
 import * as dotenv from 'dotenv';
 import express from 'express';
+import http from 'http'
 
 /* eslint-disable no-console */
 import { noise } from '@chainsafe/libp2p-noise'
@@ -15,6 +16,7 @@ import { webSockets } from '@libp2p/websockets'
 import { createLibp2p } from 'libp2p'
 import * as  peerIdLib  from '@libp2p/peer-id'
 import * as createEd25519PeerId from '@libp2p/peer-id-factory'
+import { webTransport } from '@libp2p/webtransport'
 import fs from "node:fs";
 import httpProxy from 'http-proxy' 
 
@@ -38,6 +40,7 @@ const port = process.env.PORT
 let whitelist = []
 
 let app = express();
+const server = http.createServer(app);
 
 async function main () {
 
@@ -156,10 +159,15 @@ async function main () {
   //   console.log('listening on http://localhost:' + port);
   // });
 
+  // const webSocketServer = webSockets()
+  // console.log(webSocketServer)
+
     let adresses = process.env.PORT
     ? {
-      listen: [`/ip4/0.0.0.0/tcp/${port}/wss`],
-      announce: [`/dnsaddr/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/${port}/wss/p2p/${peerId.toString()}`]
+      listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
+      announce: [
+        `/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/${port}/wss/p2p/${peerId.toString()}`
+      ]
     }
     : {
       listen: [`/ip4/0.0.0.0/tcp/${port}/ws`],
@@ -170,7 +178,8 @@ async function main () {
     peerId,
     addresses: adresses,
     transports: [
-      webSockets()
+      webTransport(),
+      webSockets({ server })
     ],
     connectionEncryption: [
       noise()
@@ -198,10 +207,15 @@ async function main () {
   //   ws: true
   // }).listen(port);
 
-    // app.listen(port, () => {
-    // console.log('pid: ', process.pid);
-    // console.log('listening on http://localhost:' + port);
+  // app.listen(port, () => {
+  //   console.log('pid: ', process.pid);
+  //   console.log('listening on http://localhost:' + port);
   // });
+
+  // server.listen(port, () => {
+  //   console.log('pid: ', process.pid);
+  //   console.log('listening on http://localhost:' + port);
+  // })
 }
 
 main()

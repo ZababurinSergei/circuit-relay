@@ -27,6 +27,7 @@
     "@libp2p/identify": "^2.1.0",
     "@libp2p/peer-id-factory": "^4.2.4",
     "@libp2p/websockets": "^8.0.4",
+    "@libp2p/webtransport": "^4.1.9",
     "@multiformats/multiaddr": "^12.1.11",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
