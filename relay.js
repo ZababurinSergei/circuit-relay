@@ -165,10 +165,7 @@ async function main () {
     let adresses = process.env.PORT
     ? {
       listen: [
-        `/ip4/0.0.0.0/tcp/${port}/ws`,
-        `/ip6/::/tcp/${port}/ws`,
-        `/ip4/0.0.0.0/tcp/${port}/wss`,
-        `/ip6/::/tcp/${port}/wss`
+        `/ip4/0.0.0.0/tcp/${port}/wss`
       ],
       announce: [
         `/dns4/${process.env.RENDER_EXTERNAL_HOSTNAME}/tcp/${port}/wss/p2p/${peerId.toString()}`
